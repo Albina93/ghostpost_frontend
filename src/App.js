@@ -1,24 +1,29 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Route } from "react-router-dom";
+import Post from './components/Post.js';
+import Welcome from './components/Welcome';
+import Roast from "./components/Roast";
+import Boast from "./components/Boast";
+import Popular from "./components/Popular";
+import Form from "./components/Form";
+import Navigation from "./components/Navigation";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navigation />
+      <Route
+        exact
+        path="/"
+        render={props => <Welcome {...props} name="Albina" />}
+      />
+      <Route path="/post" component={Post} />
+      <Route path="/roasts" component={Roast} />
+      <Route path="/boasts" component={Boast} />
+      <Route path="/popular" component={Popular} />
+      <Route path="/create" component={Form} />
+      
     </div>
   );
 }
