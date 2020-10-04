@@ -130,12 +130,12 @@ class Post extends Component {
           <ul key={post.id}>
 
               { post.is_roast ? 'Roasts' : 'Boasts'}
-              <li>{post.content}</li>
-              <li>{post.total_votes}</li>
+              <li>Content: {post.content}</li>
+              <li>Total votes: {post.total_votes}</li>
               <li>Upvote:<button onClick={(e) => this.handleUpvote(e, post.id)}>{post.upvote}</button>
              == Downvote <button onClick={(e) => this.handleDownvote(e, post.id)}>{post.downvote}</button></li>
-              <li>{moment(post.date_created).format('MMMM Do YYYY, h:mm:ss a')}</li>
-              <li>{post.last_update}</li>
+              <li>Date Created: {moment(post.date_created).format('MMMM Do YYYY, h:mm:ss a')}</li>
+              <li>Last Update: {moment(post.last_update).format('MMMM Do YYYY, h:mm:ss a')}</li>
               <li>{post.sec_key}</li>
 </ul>
              

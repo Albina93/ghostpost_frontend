@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 
 
 class Roast extends Component {
@@ -22,6 +23,78 @@ class Roast extends Component {
       };
   
     }
+
+
+    handleUpvote = (e, id) => { 
+      e.preventDefault() 
+      fetch("http://127.0.0.1:8000/api/post/" + id + "/upvote/", {
+          method: 'post',
+          headers: {
+              'Accept': 'application/json, text/plain, */*',
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify('')
+      })
+      .then(res => res.json())
+      .then(res => {
+          // console.log(res)
+          fetch("http://127.0.0.1:8000/api/post/")
+      .then(res => res.json())
+      .then(
+          (result) => {
+              // console.log(result)
+              this.setState({
+                  isLoaded: true,
+                  posts: result
+              });
+          },
+          (error) => {
+              this.setState({
+                  isLoaded: true,
+                  error
+              });
+          }
+          )
+
+      })
+      
+     }
+ 
+  
+     handleDownvote = (e, id) => { 
+      e.preventDefault() 
+      fetch("http://127.0.0.1:8000/api/post/" + id + "/downvote/", {
+          method: 'post',
+          headers: {
+              'Accept': 'application/json, text/plain, */*',
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify('')
+      })
+      .then(res => res.json())
+      .then(res => {
+          
+          fetch("http://127.0.0.1:8000/api/post/")
+      .then(res => res.json())
+      .then(
+          (result) => {
+            
+              this.setState({
+                  isLoaded: true,
+                  posts: result
+              });
+          },
+          (error) => {
+              this.setState({
+                  isLoaded: true,
+                  error
+              });
+          }
+          )
+
+      })
+      
+     }
   
     componentDidMount() {
       fetch("http://127.0.0.1:8000/api/post/roasts")
@@ -57,11 +130,12 @@ class Roast extends Component {
           <ul key={roast.id}>
 
               { roast.is_roast ? 'Roasts' : 'Boasts'}
-              <li>{roast.content}</li>
-              <li>{roast.upvote}</li>
-              <li>{roast.downvote}</li>
-              <li>{roast.date_created}</li>
-              <li>{roast.last_update}</li>
+              <li>Content: {roast.content}</li>
+              <li>Total votes: {roast.total_votes}</li>
+              <li>Upvote:<button onClick={(e) => this.handleUpvote(e, roast.id)}>{roast.upvote}</button>
+             == Downvote <button onClick={(e) => this.handleDownvote(e, roast.id)}>{roast.downvote}</button></li>
+             <li>Date Created: {moment(roast.date_created).format('MMMM Do YYYY, h:mm:ss a')}</li>
+              <li>Last Update: {moment(roast.last_update).format('MMMM Do YYYY, h:mm:ss a')}</li>
               <li>{roast.sec_key}</li>
 </ul>
              

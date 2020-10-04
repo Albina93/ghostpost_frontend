@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import moment from 'moment';
 
 class Boast extends Component {
     constructor(props) {
@@ -7,7 +7,7 @@ class Boast extends Component {
       this.state = {
         error: null,
         isloaded: false,
-        roasts: [
+        boasts: [
           {
             "is_roast": true,
             "content": "Aldo",
@@ -22,6 +22,77 @@ class Boast extends Component {
       };
   
     }
+
+    handleUpvote = (e, id) => { 
+      e.preventDefault() 
+      fetch("http://127.0.0.1:8000/api/post/" + id + "/upvote/", {
+          method: 'post',
+          headers: {
+              'Accept': 'application/json, text/plain, */*',
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify('')
+      })
+      .then(res => res.json())
+      .then(res => {
+          // console.log(res)
+          fetch("http://127.0.0.1:8000/api/post/")
+      .then(res => res.json())
+      .then(
+          (result) => {
+              // console.log(result)
+              this.setState({
+                  isLoaded: true,
+                  posts: result
+              });
+          },
+          (error) => {
+              this.setState({
+                  isLoaded: true,
+                  error
+              });
+          }
+          )
+
+      })
+      
+     }
+ 
+  
+     handleDownvote = (e, id) => { 
+      e.preventDefault() 
+      fetch("http://127.0.0.1:8000/api/post/" + id + "/downvote/", {
+          method: 'post',
+          headers: {
+              'Accept': 'application/json, text/plain, */*',
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify('')
+      })
+      .then(res => res.json())
+      .then(res => {
+          
+          fetch("http://127.0.0.1:8000/api/post/")
+      .then(res => res.json())
+      .then(
+          (result) => {
+            
+              this.setState({
+                  isLoaded: true,
+                  posts: result
+              });
+          },
+          (error) => {
+              this.setState({
+                  isLoaded: true,
+                  error
+              });
+          }
+          )
+
+      })
+      
+     }
   
     componentDidMount() {
       fetch("http://127.0.0.1:8000/api/post/boasts")
@@ -45,7 +116,7 @@ class Boast extends Component {
     
   
     render() {
-        const { error, isLoaded, roasts } = this.state;
+        const { error, isLoaded, boasts } = this.state;
       if (error) {
         return <div>Error: {error.message}</div>;
       } else if (!isLoaded) {
@@ -57,11 +128,12 @@ class Boast extends Component {
           <ul key={boast.id}>
 
               { boast.is_roast ? 'Roasts' : 'Boasts'}
-              <li>{boast.content}</li>
-              <li>{boast.upvote}</li>
-              <li>{boast.downvote}</li>
-              <li>{boast.date_created}</li>
-              <li>{boast.last_update}</li>
+              <li>Content: {boast.content}</li>
+              <li>Total votes: {boast.total_votes}</li>
+              <li>Upvote:<button onClick={(e) => this.handleUpvote(e, boast.id)}>{boast.upvote}</button>
+             == Downvote <button onClick={(e) => this.handleDownvote(e, boast.id)}>{boast.downvote}</button></li>
+             <li>Date Created: {moment(boast.date_created).format('MMMM Do YYYY, h:mm:ss a')}</li>
+              <li>Last Update: {moment(boast.last_update).format('MMMM Do YYYY, h:mm:ss a')}</li>
               <li>{boast.sec_key}</li>
 </ul>
              
